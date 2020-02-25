@@ -1,0 +1,101 @@
+
+import json
+import random
+import re
+
+from dateutil import parser
+import scrapy
+
+
+user_agents = [
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36',
+    'Windows 	Mozilla/5.0 (Windows NT 6.1; WOW64; rv:54.0) Gecko/20100101 Firefox/73.0',
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/73.0']
+
+
+class MumsnetSpider(scrapy.Spider):
+    name = 'mumsnet'
+    
+    custom_settings = {'USER_AGENT': random.choice(user_agents)}
+
+    
+    def __init__(self, **kwargs):
+        self.terms = ['trans']
+        super().__init__()
+        
+        
+    def start_requests(self):
+        url = 'https://www.mumsnet.com/info/search'
+        for term in self.terms:
+            params = {'q': term}
+            yield scrapy.FormRequest(url=url, method='GET', formdata=params,
+                meta={'term': term}, callback=self.parse)
+
+
+    def parse(self, response):
+        cx_path = "//script[starts-with(.,'(function(){var cx')]/text()"
+        cx_scr = scr = response.xpath(cx_path).extract_first()
+        self.cx, = re.findall(r"(?<=cx=')[a-zA-Z0-9:]+", cx_scr)
+        url = 'https://cse.google.com/cse.js'
+        term = response.meta.get('term')
+        params = {'cx': self.cx}
+        yield scrapy.FormRequest(url=url, method='GET', formdata=params,
+            meta={'term': term}, callback=self.parse_cse)
+        
+        
+    def search_pars(self, term, page=1):
+        suffix = str(random.randint(2000, 4000))
+        return {'rsz': 'filtered_cse', 'num': '10', 'hl': 'en',
+            'source': 'gcsc', 'gss': '.com', 'start': str(10*page),
+            'cselibv': self.cse_lib, 'cx': self.cx, 'q': term, 'safe': 'off',
+            'cse_tok': self.cse, 'exp': 'csqr,cc',
+            'callback': 'google.search.cse.api'+suffix}
+    
+        
+    def parse_cse(self, response):
+        self.cse, = re.findall(u'(?<="cse_token": ")[a-zA-Z0-9:]+',
+            response.text)
+        self.cse_lib, = re.findall(u'(?<="cselibVersion": ")[a-zA-Z0-9:]+',
+            response.text)
+        term = response.meta.get('term')
+        params = self.search_pars(term)
+        yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
+            method='GET', formdata=params,
+            meta={'term': term, 'page': 1}, callback=self.parse_results)
+        
+        
+    def parse_results(self, response):
+        
+        json_resp = json.loads('{'
+            +'\n'.join(response.text.split('\n')[2:-1])
+            +'}')
+        
+        results = json_resp.get('results', [])
+        
+        for res in results:
+            yield scrapy.Request(url=res['url'], callback=self.parse_thread)
+
+        if results:
+            term = response.meta['term']
+            page = 1 + response.meta.get('page', 1)
+            params = self.search_pars(term, page=page)
+            yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
+                method='GET', formdata=params,
+                meta={'term': term, 'page': page}, callback=self.parse_results)
+                    
+        
+    def parse_thread(self, response):
+        thread = response.css('h1.thread_name').xpath('text()').extract_first()
+        posts = response.css('div#posts>div.post')
+        nicks = posts.css('span.nick').xpath('text()').extract()
+        dates = list(map(parser.parse, posts.css('span.post_time').xpath(
+            'text()').extract()))
+        content = ['\n'.join(post.xpath(
+            'descendant-or-self::*/text()').extract()).strip()
+            for post in posts.css('div.talk-post')]   
+        
+        next_page = response.css('a#message-pages-bottom-next').xpath(
+            '@href').extract_first()
+        
+        print(thread)
