@@ -87,6 +87,7 @@ class MumsnetSpider(scrapy.Spider):
         
     def parse_thread(self, response):
         thread = response.css('h1.thread_name').xpath('text()').extract_first()
+        print(thread)
         posts = response.css('div#posts>div.post')
         nicks = posts.css('span.nick').xpath('text()').extract()
         dates = list(map(parser.parse, posts.css('span.post_time').xpath(
@@ -95,7 +96,14 @@ class MumsnetSpider(scrapy.Spider):
             'descendant-or-self::*/text()').extract()).strip()
             for post in posts.css('div.talk-post')]   
         
+        offset = response.meta.get('offset', 0)
+        
         next_page = response.css('a#message-pages-bottom-next').xpath(
             '@href').extract_first()
         
-        print(thread)
+        if next_page:
+            next_url = response.urljoin(next_page)
+            yield scrapy.Request(url=next_url, callback=self.parse_thread)
+            
+        
+        
