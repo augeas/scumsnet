@@ -1,0 +1,5 @@
+neo4j-driver
+python-dateutil
+scrapy
+scrapyd
+spacy
