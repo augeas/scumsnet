@@ -1,10 +1,13 @@
 
+from datetime import datetime
 import json
 import random
 import re
 
 from dateutil import parser
 import scrapy
+
+from scumsnet.items import Post, Thread
 
 
 user_agents = [
@@ -44,13 +47,16 @@ class MumsnetSpider(scrapy.Spider):
             meta={'term': term}, callback=self.parse_cse)
         
         
-    def search_pars(self, term, page=1):
+    def search_pars(self, term, page=1, date_sort=True):
         suffix = str(random.randint(2000, 4000))
-        return {'rsz': 'filtered_cse', 'num': '10', 'hl': 'en',
+        pars = {'rsz': 'filtered_cse', 'num': '10', 'hl': 'en',
             'source': 'gcsc', 'gss': '.com', 'start': str(10*page),
             'cselibv': self.cse_lib, 'cx': self.cx, 'q': term, 'safe': 'off',
             'cse_tok': self.cse, 'exp': 'csqr,cc',
             'callback': 'google.search.cse.api'+suffix}
+        if date_sort:
+            pars['sort'] = 'date'
+        return pars
     
         
     def parse_cse(self, response):
@@ -86,24 +92,40 @@ class MumsnetSpider(scrapy.Spider):
                     
         
     def parse_thread(self, response):
-        thread = response.css('h1.thread_name').xpath('text()').extract_first()
-        print(thread)
+        thread = response.meta.get('thread',
+            response.css('h1.thread_name').xpath('text()').extract_first())
+
         posts = response.css('div#posts>div.post')
         nicks = posts.css('span.nick').xpath('text()').extract()
-        dates = list(map(parser.parse, posts.css('span.post_time').xpath(
-            'text()').extract()))
+        dates = list(map(datetime.isoformat, map(parser.parse,
+            posts.css('span.post_time').xpath('text()').extract())))
         content = ['\n'.join(post.xpath(
             'descendant-or-self::*/text()').extract()).strip()
             for post in posts.css('div.talk-post')]   
-        
-        offset = response.meta.get('offset', 0)
-        
+                
         next_page = response.css('a#message-pages-bottom-next').xpath(
             '@href').extract_first()
         
+        thread_page = response.meta.get('thread_page', 0)
+        thread_url = response.meta.get('thread_url', response.url)
+
+        post_items = [Post(
+            **{'author': author, 'copy': copy, 'timestamp': timestamp})
+            for author, copy, timestamp in zip(nicks, content, dates)]
+        
+        if thread_page:
+            offset = 1
+        else:
+            offset = 0
+        
+        if post_items:
+            yield Thread(title=thread, url=thread_url, posts=post_items[offset:])
+        
         if next_page:
             next_url = response.urljoin(next_page)
-            yield scrapy.Request(url=next_url, callback=self.parse_thread)
+            yield scrapy.Request(url=next_url, callback=self.parse_thread,
+                meta={'thread_page': thread_page+1, 'thread': thread,
+                'thread_url': thread_url})
             
         
         
