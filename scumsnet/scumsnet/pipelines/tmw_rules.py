@@ -9,7 +9,7 @@ inappropriate_medical = 'inappropriate_medical'
 
 rule_tags = [offensive, inaccurate, inaccurate, inappropriate_medical]
 
-tag_details = {offensive:'term which many trans people find offensive',
+tag_details = {offensive: 'term which many trans people find offensive',
     inaccurate: 'inaccurate usage',
     inappropriate: 'many trans and intersex people consider this term inappropriate',
     inappropriate_medical: 'medical/legal term that many trans and intersex people consider inappropriate'}
