@@ -2,6 +2,11 @@
 import scrapy
 
 
+class Entity(scrapy.Item):
+    text = scrapy.Field()
+    label = scrapy.Field()
+
+
 class Annotation(scrapy.Item):
     text = scrapy.Field()
     pos = scrapy.Field()
@@ -14,6 +19,7 @@ class Post(scrapy.Item):
     copy = scrapy.Field()
     timestamp = scrapy.Field()
     annotations = scrapy.Field()
+    entities = scrapy.Field()
 
 
 class Thread(scrapy.Item):
