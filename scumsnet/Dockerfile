@@ -11,3 +11,11 @@ RUN apk add --no-cache ${RUNTIME_PACKAGES} ${BUILD_PACKAGES} \
 	&& apk del ${BUILD_PACKAGES} \
 	&& rm -rf /root/.cache 
 
+COPY scrapy.cfg /
+RUN mkdir scumsnet && mkdir -p /etc/service
+ADD ./scumsnet /scumsnet
+ADD ./service /etc/service
+
+CMD ["runsvdir", "/etc/service"]
+
+
