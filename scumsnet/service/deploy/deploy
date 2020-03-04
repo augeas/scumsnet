@@ -1,0 +1,4 @@
+#!/bin/sh
+cd /scumsnet
+scrapyd-deploy
+sv down deploy
