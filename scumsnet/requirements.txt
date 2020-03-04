@@ -1,7 +1,10 @@
+bokeh
 jupyter
 neo4j-driver
+pandas
 python-dateutil
 scrapy
 scrapyd
+scrapyd-client
 scrapydweb
 spacy

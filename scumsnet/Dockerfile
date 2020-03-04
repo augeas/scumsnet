@@ -1,7 +1,7 @@
 FROM python:3.6-alpine
 
-ENV RUNTIME_PACKAGES libstdc++ libxslt libxml2 git curl libpq
-ENV BUILD_PACKAGES build-base libxslt-dev libxml2-dev libffi-dev python3-dev openssl-dev
+ENV RUNTIME_PACKAGES libstdc++ libxslt libxml2 git curl libpq runit bash
+ENV BUILD_PACKAGES build-base libxslt-dev libxml2-dev libffi-dev python3-dev jpeg-dev zlib-dev openssl-dev
 
 COPY requirements.txt /
 
