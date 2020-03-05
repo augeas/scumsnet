@@ -1,0 +1,4 @@
+#!/bin/sh
+sv start scrapyd || exit 1
+sv start logparser || exit 1
+exec /usr/local/bin/scrapydweb
