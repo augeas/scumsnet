@@ -1,0 +1,2 @@
+cd /scumsnet
+jupyter notebook --allow-root --no-browser --ip='*' --NotebookApp.token='' --NotebookApp.password=''
