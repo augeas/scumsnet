@@ -79,16 +79,24 @@ class MumsnetSpider(scrapy.Spider):
         
         results = json_resp.get('results', [])
         
+        term = response.meta['term']
+        page = response.meta.get('page', 1)
+        
+        if 'results' not in json_resp.keys():
+            params = self.search_pars(term, page=page)
+            yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
+                method='GET', formdata=params,
+                meta={'term': term, 'page': page}, callback=self.parse_results)            
+        
         for res in results:
             yield scrapy.Request(url=res['url'], callback=self.parse_thread)
 
         if results:
-            term = response.meta['term']
-            page = 1 + response.meta.get('page', 1)
-            params = self.search_pars(term, page=page)
+            next_page = 1 + page
+            params = self.search_pars(term, page=next_page)
             yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
                 method='GET', formdata=params,
-                meta={'term': term, 'page': page}, callback=self.parse_results)
+                meta={'term': term, 'page': next_page}, callback=self.parse_results)
                     
         
     def parse_thread(self, response):
