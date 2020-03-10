@@ -59,20 +59,22 @@ class NeoPipeline(object):
             
         neo_tx(self.neo_db, entity_unwind, data=entity_data)
         
+        annot_data = [[
+            {'post_id': post['post_id'], 'text': cypherval(annot['text']),
+            'pos': annot['pos'], 'tag': annot['tag'], 'label': annot['label']}
+            for annot in post.get('annotations', [])]
+            for post in item.get('posts', [])]
+            
+        annot_unwind = '''
+            UNWIND $data AS data
+            UNWIND data AS annots
+            MATCH (p:post {post_id: annots.post_id})
+            MERGE (a:annotation {text: annots.text, pos: annots.pos,
+            tag: annots.tag, label: annots.label})
+            MERGE (p)-[:FLAGGED]->(a)'''
         
         
-        
-        '''
-        users = set((post['author'] for post in item['posts']))
-        user_nodes = [{'name': u} for u in users]
-        unwind_tx(self.neo_db, user_nodes, 'MERGE (x:user {name: d.name})')
-        
-        entity_nodes = {
-            tuple(ent.values()): {'text': cypherval(ent['text']),
-            'label': ent['label']} for ent in chain.from_iterable(
-            (post.get('entities', []) for post in item['posts']))}
-        unwind_tx(self.neo_db, list(entity_nodes.values()),
-            'MERGE (x:entity {text: d.text, label: d.label})')
-        '''
+        neo_tx(self.neo_db, annot_unwind, data=annot_data)
+
 
         return item
