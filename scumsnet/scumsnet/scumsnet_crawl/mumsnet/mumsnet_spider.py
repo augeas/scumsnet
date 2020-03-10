@@ -25,7 +25,7 @@ class MumsnetSpider(scrapy.Spider):
 
     
     def __init__(self, **kwargs):
-        self.terms = ['trans']
+        self.terms = ['trans', 'transgender', 'transsexual']
         super().__init__()
         
         
@@ -34,7 +34,7 @@ class MumsnetSpider(scrapy.Spider):
         for term in self.terms:
             params = {'q': term}
             yield scrapy.FormRequest(url=url, method='GET', formdata=params,
-                meta={'term': term}, callback=self.parse)
+                meta={'term': term}, callback=self.parse, dont_filter=True)
 
 
     def parse(self, response):
@@ -45,7 +45,7 @@ class MumsnetSpider(scrapy.Spider):
         term = response.meta.get('term')
         params = {'cx': self.cx}
         yield scrapy.FormRequest(url=url, method='GET', formdata=params,
-            meta={'term': term}, callback=self.parse_cse)
+            meta={'term': term}, callback=self.parse_cse, dont_filter=True)
         
         
     def search_pars(self, term, page=1, date_sort=True):
@@ -69,7 +69,8 @@ class MumsnetSpider(scrapy.Spider):
         params = self.search_pars(term)
         yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
             method='GET', formdata=params,
-            meta={'term': term, 'page': 1}, callback=self.parse_results)
+            meta={'term': term, 'page': 1}, callback=self.parse_results,
+            dont_filter=True)
         
         
     def parse_results(self, response):
@@ -87,7 +88,8 @@ class MumsnetSpider(scrapy.Spider):
             params = self.search_pars(term, page=page)
             yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
                 method='GET', formdata=params,
-                meta={'term': term, 'page': page}, callback=self.parse_results)            
+                meta={'term': term, 'page': page}, callback=self.parse_results,
+                dont_filter=True)            
         
         for res in results:
             yield scrapy.Request(url=res['url'], callback=self.parse_thread)
