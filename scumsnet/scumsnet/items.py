@@ -20,6 +20,7 @@ class Post(scrapy.Item):
     timestamp = scrapy.Field()
     annotations = scrapy.Field()
     entities = scrapy.Field()
+    post_id = scrapy.Field()
 
 
 class Thread(scrapy.Item):
