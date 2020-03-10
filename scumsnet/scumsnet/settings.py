@@ -5,3 +5,5 @@ ITEM_PIPELINES = {
     'scumsnet.pipelines.tmw_nlp.TMWEntityPipeline': 200,
     'scumsnet.pipelines.scumsnet_neo.NeoPipeline': 300}
 
+AUTOTHROTTLE_ENABLED = True
+

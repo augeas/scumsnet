@@ -32,7 +32,7 @@ class NeoPipeline(object):
                                                               
         thread_merge = '''
             MERGE (t:thread {{title: "{title}", url: "{url}"}})'''.format(
-                title=item['title'], url=item['url'])
+                title=cypherval(item['title']), url=item['url'])
             
         post_unwind = '''
             WITH t
@@ -51,7 +51,13 @@ class NeoPipeline(object):
             for post in  item.get('posts', [])]
             
         entity_unwind = '''
-            '''
+            UNWIND $data AS data
+            UNWIND data AS ents
+            MATCH (p:post {post_id: ents.post_id})
+            MERGE (e:entity {text: ents.text, label: ents.label})
+            MERGE (p)-[:MENTIONS]->(e)'''
+            
+        neo_tx(self.neo_db, entity_unwind, data=entity_data)
         
         
         
