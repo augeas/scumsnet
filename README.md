@@ -14,4 +14,7 @@ on the [GLAAD](https://www.glaad.org/)
 
 ## Running Crawls
 
-
+If the containers are running correctly, you should see
+[SrapydWeb](https://github.com/my8100/scrapydweb) at [http://localhost:5000](http://localhost:5000).
+Select "Run Spider" on the left:
+![Run Spider](/img/run_spider_0.png)
