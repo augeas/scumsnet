@@ -14,7 +14,9 @@ on the [GLAAD](https://www.glaad.org/)
 Their inclusion in forum posts might be quotations or reported speech, so they are not *automatically* an
 indication of transphobia. However, their lack of inclusion does not imply that a post is *not* transphobic.)
 [Named entities](https://spacy.io/usage/linguistic-features#named-entities) (e.g. people, places, and
-organizations) are extracted using the [Spacy](https://spacy.io) Natural Language Processing (NLP) library.
+organizations) are extracted using the [Spacy](https://spacy.io) Natural Language Processing (NLP) library,
+which is also used to identify where the word "transgender" is used as a noun by
+[part of speech tagging](https://spacy.io/usage/linguistic-features#pos-tagging).
 
 ## Getting Started
 
@@ -80,6 +82,10 @@ MATCH p=()-[r:MENTIONS]->() RETURN p LIMIT 25
 
 !["MENTIONS" relationships](/img/neo_mentions.png)
 
+Double-clicking on nodes will expand their other relationships.
+Although it can be entertaining and occaisonally instructive to play with the graph in this way,
+deeper insights will be found by using the [Cypher query language](https://neo4j.com/developer/cypher-query-language/).
+
 ### The Graph Model
 
 Users POST posts that are POSTED_IN in threads:
@@ -143,4 +149,24 @@ Annotations associated with posts that contain the word "Guardian":
 
 ```
 MATCH (p:post)-[:FLAGGED]->(a:annotation) WHERE p.text CONTAINS 'Guardian' RETURN DISTINCT a.label
+```
+
+## Jupyter Notebooks
+
+Although built on the minimal [Alpine Linux](https://alpinelinux.org/)
+[Python 3.6 Docker image](https://hub.docker.com/_/python), since the "scumsnet" image
+contains the Spacy library and its language model, it was never going to be especially small.
+However, it's still smaller than the standard [Python 3.6 image](https://hub.docker.com/_/python).
+Because of this, the
+[Pandas](https://pandas.pydata.org/), [NumPy](https://numpy.org/), and [Bokeh](https://bokeh.org/)
+libraries have been thrown in too. You can use them to play with the data with a
+[Jupyter Notebook](https://jupyter.org/) server running at
+[http://localhost:8888](http://localhost:8888). Its use is beyond the scope of this README, but
+one can obtain a connection to the database with the [Neo4J Python driver](https://neo4j.com/developer/python/)
+like so:
+
+```python
+from neo4j import GraphDatabase
+
+neo_db = GraphDatabase.driver('bolt://scumsnet_neo:7687')
 ```
