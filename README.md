@@ -21,9 +21,10 @@ organizations) are extracted using the [Spacy](https://spacy.io) Natural Languag
 
 ## Running Crawls
 
+By default, the crawler searches Mumsnet for the terms "trans", "transgender", and "transsexual".
 If the containers are running correctly, you should see
-[SrapydWeb](https://github.com/my8100/scrapydweb) at [http://localhost:5000](http://localhost:5000).
-Select "Run Spider" on the left:
+[SrapydWeb](https://github.com/my8100/scrapydweb) running at
+[http://localhost:5000](http://localhost:5000). Select "Run Spider" on the left:
 
 ![Run Spider](/img/run_spider_0.png)
 
@@ -58,6 +59,26 @@ docker exec -ti scumsnet curl http://localhost:6800/schedule.json -d project=scu
 ```
 
 ## Querying The Database
+
+[Neo4J](https://neo4j.com/) should be running at [http://localhost:7474](http://localhost:7474).
+You should be able to connect to the graph database without any credentials:
+
+![connecting to Neo4J](/img/neo_connect.png)
+
+Click the "Database" icon at the top-left. If a crawl has been running, you should see that the
+database contains nodes and relationships:
+
+![database info](/img/neo_info.png)
+
+Clicking on a node or relationship type, for instance, "MENTIONS", will automatically run
+a [cypher query](https://neo4j.com/docs/cypher-refcard/current/) and display it as a force-directed
+graph. You will see nodes representing posts that mention named entities.
+
+```
+MATCH p=()-[r:MENTIONS]->() RETURN p LIMIT 25
+```
+
+!["MENTIONS" relationships](/img/neo_mentions.png)
 
 ### The Graph Model
 
