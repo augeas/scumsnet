@@ -17,4 +17,19 @@ on the [GLAAD](https://www.glaad.org/)
 If the containers are running correctly, you should see
 [SrapydWeb](https://github.com/my8100/scrapydweb) at [http://localhost:5000](http://localhost:5000).
 Select "Run Spider" on the left:
+
 ![Run Spider](/img/run_spider_0.png)
+
+Choose the local [Scrapyd server](https://scrapyd.readthedocs.io/en/stable/), the "scumsnet" project,
+and the "mumsnet" spider:
+
+![Run Spider](/img/run_spider_1.png)
+
+Finally, click "Check CMD" to generate the [curl](https://curl.haxx.se/) command, then run it by clicking
+"Run Spider".
+
+You could just run the [curl](https://curl.haxx.se/) command in the terminal:
+
+```sh
+curl http://localhost:6800/schedule.json -d project=scumsnet -d spider=mumsnet
+```
