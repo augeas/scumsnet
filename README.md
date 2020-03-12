@@ -103,14 +103,14 @@ A post is FLAGGED with annotations and MENTIONS entities:
 
 The nodes have the following properties:
 
-| Node       | Properties               |
-|------------|--------------------------|
-| thread     | title url                |
-| user       | name text posted post_id |
-| post       | text posted              |
-| entity     | text label               |
-| annotation | text pos tag label       | 
-|------------|--------------------------|
+| Node       | Properties            |
+|------------|-----------------------|
+| thread     | title, url            |
+| user       | name                  |
+| post       | text, posted, post_id |
+| entity     | text, label           |
+| annotation | text, pos, tag, label | 
+
 
 ### Example Queries
 
