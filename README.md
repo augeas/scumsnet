@@ -1,6 +1,6 @@
 # scumsnet
 
-(C) Giles Greenway, 2020
+&copy; Giles Greenway, 2020
 
 Scumsnet is a web-crawler based on [Scrapy](https://scrapy.org/) intended for investigating
 transphobia on the [Mumsnet forums](https://en.wikipedia.org/wiki/Mumsnet#Criticisms). It
@@ -9,7 +9,12 @@ annotates posts based on the [Trans Media Watch](http://www.transmediawatch.org/
 on the [GLAAD](https://www.glaad.org/)
 [Media Reference Guide](https://www.glaad.org/reference/transgender) and the
 [TGEU](https://tgeu.org/)
-[Guide For Journalists](https://tgeu.org/wp-content/uploads/2016/07/TGEU_journalistGuide16LR_singlepages.pdf)
+[Guide For Journalists](https://tgeu.org/wp-content/uploads/2016/07/TGEU_journalistGuide16LR_singlepages.pdf).
+(It should be noted that some of the terms deemed inappropriate may be used by trans people about themselves.
+Their inclusion in forum posts might be quotations or reported speech, so they are not *automatically* an
+indication of transphobia. However, their lack of inclusion does not imply that a post is *not* transphobic.)
+[Named entities](https://spacy.io/usage/linguistic-features#named-entities) (e.g. people, places organizations)
+are extracted using the [Spacy](https://spacy.io) Natural Language Processing (NLP) library.
 
 ## Getting Started
 
