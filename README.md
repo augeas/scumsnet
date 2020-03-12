@@ -1,5 +1,7 @@
 # scumsnet
 
+(C) Giles Greenway, 2020
+
 Scumsnet is a web-crawler based on [Scrapy](https://scrapy.org/) intended for investigating
 transphobia on the [Mumsnet forums](https://en.wikipedia.org/wiki/Mumsnet#Criticisms). It
 annotates posts based on the [Trans Media Watch](http://www.transmediawatch.org/)
@@ -26,10 +28,28 @@ and the "mumsnet" spider:
 ![Run Spider](/img/run_spider_1.png)
 
 Finally, click "Check CMD" to generate the [curl](https://curl.haxx.se/) command, then run it by clicking
-"Run Spider".
+"Run Spider". You can examine the crawls progress by clicking "Jobs" to the left, where you can see how
+many pages and items have been crawled, view logs or stop the crawl.
 
-You could just run the [curl](https://curl.haxx.se/) command in the terminal:
+![Run Spider](/img/run_spider_2.png)
+
+You could also just run the [curl](https://curl.haxx.se/) command in the terminal:
 
 ```sh
 curl http://localhost:6800/schedule.json -d project=scumsnet -d spider=mumsnet
 ```
+
+If you don't have [curl](https://curl.haxx.se/), you can run the command in the scumsnet
+[Docker container](https://docs.docker.com/engine/reference/commandline/exec/)...
+
+```sh
+docker exec -ti scumsnet curl http://localhost:6800/schedule.json -d project=scumsnet -d spider=mumsnet
+```
+
+...or just run the supplied script:
+
+```sh
+./run_crawl.sh 
+```
+
+## Querying The Database
