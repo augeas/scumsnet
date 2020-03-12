@@ -95,4 +95,52 @@ A post is FLAGGED with annotations and MENTIONS entities:
 (p:post)-[:MENTIONS]->(e:entity)
 ```
 
+### Example Queries
 
+To find the most common annotations:
+
+```
+MATCH (a:annotation) RETURN a.label AS annotation, COUNT(a.label) AS count ORDER BY count DESC LIMIT 20
+```
+
+To find the threads with the most posts:
+
+```
+MATCH (t:thread)<-[:POSTED_IN]-(p:post) RETURN t.title AS thread, COUNT(p) AS posts ORDER BY posts DESC LIMIT 20
+```
+
+To find the most active users in terms of their numbers of posts:
+
+```
+MATCH (u:user)-[:POSTED]->(p:post) RETURN u.name AS user, COUNT(p) AS posts ORDER BY posts DESC LIMIT 20
+```
+
+To finds the threads with the most annotations:
+
+```
+MATCH (t:thread)<-[:POSTED_IN]-(p:post)-[:FLAGGED]->(a:annotation)
+RETURN t.title AS thread, COUNT(a) AS annotations ORDER BY annotations DESC LIMIT 20
+```
+
+To find the entities that occur in the most threads:
+
+```
+MATCH (t:thread)<-[:POSTED_IN]-(p:post)-[:MENTIONS]->(e:entity)
+RETURN e.text AS entity, e.label AS label, COUNT(t) AS threads
+ORDER BY threads DESC LIMIT 50
+```
+
+Entities labeled "PERSON" occuring in posts that
+[contain](https://neo4j.com/docs/cypher-manual/current/clauses/where/#match-string-contains)
+the word "Mermaids":
+
+```
+MATCH (p:post)-[:MENTIONS]->(e:entity) WHERE p.text CONTAINS 'Mermaids' AND e.label='PERSON'
+RETURN e.text AS person, COUNT(p) AS posts ORDER BY posts DESC LIMIT 25
+```
+
+Annotations associated with posts that contain the word "Guardian":
+
+```
+MATCH (p:post)-[:FLAGGED]->(a:annotation) WHERE p.text CONTAINS 'Guardian' RETURN DISTINCT a.label
+```
