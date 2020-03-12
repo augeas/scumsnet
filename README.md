@@ -13,8 +13,8 @@ on the [GLAAD](https://www.glaad.org/)
 (It should be noted that some of the terms deemed inappropriate may be used by trans people about themselves.
 Their inclusion in forum posts might be quotations or reported speech, so they are not *automatically* an
 indication of transphobia. However, their lack of inclusion does not imply that a post is *not* transphobic.)
-[Named entities](https://spacy.io/usage/linguistic-features#named-entities) (e.g. people, places organizations)
-are extracted using the [Spacy](https://spacy.io) Natural Language Processing (NLP) library.
+[Named entities](https://spacy.io/usage/linguistic-features#named-entities) (e.g. people, places, and
+organizations) are extracted using the [Spacy](https://spacy.io) Natural Language Processing (NLP) library.
 
 ## Getting Started
 
@@ -58,3 +58,20 @@ docker exec -ti scumsnet curl http://localhost:6800/schedule.json -d project=scu
 ```
 
 ## Querying The Database
+
+### The Graph Model
+
+Users POST posts that are POSTED_IN in threads:
+
+```
+(u:user)-[:POSTED]->(p:post)-[:POSTED_IN]->(t:thread)
+```
+
+A post is FLAGGED with annotations and MENTIONS entities: 
+
+```
+(p:post)-[:FLAGGED]->(a:annotation)
+(p:post)-[:MENTIONS]->(e:entity)
+```
+
+
