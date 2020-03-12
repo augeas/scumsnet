@@ -101,6 +101,28 @@ A post is FLAGGED with annotations and MENTIONS entities:
 (p:post)-[:MENTIONS]->(e:entity)
 ```
 
+The nodes have the following properties:
+
+| Node       | Property |
+|------------|----------|
+| thread     | title    |
+|            | url      |
+|------------|----------|
+| user       | name     |
+|------------|----------|
+| post       | text     |
+|            | posted   |
+|            | post_id  |
+|------------|----------|
+| entity     | text     |
+|            | label    |
+|------------|----------|
+| annotation | text     |
+|            | pos      |
+|            | tag      |
+|            | label    |
+|------------|----------|
+
 ### Example Queries
 
 To find the most common annotations:
