@@ -20,6 +20,22 @@ which is also used to identify where the word "transgender" is used as a noun by
 
 ## Getting Started
 
+If you are vaguely comfortable with the terminal, one can run the crawler and database with Docker.
+Start by [installing Docker](https://docs.docker.com/install/) and
+[docker-compose](https://docs.docker.com/compose/install/). This can be done with *relative* ease
+on Linux and Macs, and is *moderately* possible on Windows. Then, clone or 
+[download and extract](https://github.com/augeas/scumsnet/archive/master.zip) this repository.
+Start the containers with:
+
+```sh
+cd scumsnet
+docker-compose pull
+docker-compose up
+```
+
+It will take a little while to download the Docker images for the first time. You can shut the servers down with
+control-c. 
+
 
 ## Running Crawls
 

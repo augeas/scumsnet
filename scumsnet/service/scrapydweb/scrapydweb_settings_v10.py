@@ -25,6 +25,7 @@ ENABLE_AUTH = False
 USERNAME = ''
 PASSWORD = ''
 
+ENABLE_MONITOR = True
 
 # Make sure that [Scrapyd](https://github.com/scrapy/scrapyd) has been installed
 # and started on all of your hosts.
