@@ -1,3 +1,5 @@
+# Licensed under the Apache License Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt
+
 SPIDER_MODULES = ['scumsnet.scumsnet_crawl']
 
 ITEM_PIPELINES = {

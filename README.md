@@ -1,6 +1,7 @@
 # scumsnet
 
-&copy; Giles Greenway, 2020
+&copy; Giles Greenway, 2020.
+[Licensed under the Apache License Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 Scumsnet is a web-crawler based on [Scrapy](https://scrapy.org/) intended for investigating
 transphobia on the [Mumsnet forums](https://en.wikipedia.org/wiki/Mumsnet#Criticisms). It
@@ -16,7 +17,13 @@ indication of transphobia. However, their lack of inclusion does not imply that 
 [Named entities](https://spacy.io/usage/linguistic-features#named-entities) (e.g. people, places, and
 organizations) are extracted using the [Spacy](https://spacy.io) Natural Language Processing (NLP) library,
 which is also used to identify where the word "transgender" is used as a noun by
-[part of speech tagging](https://spacy.io/usage/linguistic-features#pos-tagging).
+[part of speech tagging](https://spacy.io/usage/linguistic-features#pos-tagging). Spacy quotes
+Named Entity Recognition accuracy of its [smallest English language model](https://spacy.io/models/en)
+of around 85%. The results of the crawl are stored in a [Neo4J graph database](https://neo4j.com/).
+
+This project is intended for personal research, none of the containerized services have any authentication,
+and you are STRONGLY DISCOURAGED from deploying them to any public-facing servers. Recall that the
+warranty of this software according to its License is [NONE AT ALL](http://www.apache.org/licenses/LICENSE-2.0.txt).
 
 ## Getting Started
 
@@ -36,6 +43,12 @@ docker-compose up
 It will take a little while to download the Docker images for the first time. You can shut the servers down with
 control-c. 
 
+## Can't Docker, Won't Docker
+
+If you can't Docker working, or are *intimidated* by terminal windows, you might be able to get things
+working with [VirtualBox](https://www.virtualbox.org/). Having installed it, download the appliance
+image "scumsnet.OVA". From the "file" menu select "Import Appliance", and choose the file you downloaded.
+Click the green "Start" arrow.
 
 ## Running Crawls
 

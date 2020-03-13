@@ -1,4 +1,6 @@
 
+# Licensed under the Apache License Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt
+
 from .tmw_rules import rules, rule_tags
 from scumsnet.items import Annotation
 
