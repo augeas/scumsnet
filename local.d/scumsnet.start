@@ -1,0 +1,7 @@
+#!/bin/sh
+cd /root/scumsnet
+git pull
+docker-compose pull
+docker-compose up --no-start
+docker-compose start
+
