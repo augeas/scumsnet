@@ -46,9 +46,14 @@ control-c.
 ## Can't Docker, Won't Docker
 
 If you can't Docker working, or are *intimidated* by terminal windows, you might be able to get things
-working with [VirtualBox](https://www.virtualbox.org/). Having installed it, download the appliance
-image "scumsnet.OVA". From the "file" menu select "Import Appliance", and choose the file you downloaded.
-Click the green "Start" arrow.
+working with [VirtualBox](https://www.virtualbox.org/). Having installed it, download the appliance image
+["scumsnet_alpine_lite.ova"](https://scumsnet.s3.eu-west-2.amazonaws.com/scumsnet_alpine_lite.ova).
+Run VirtualBox, from the "file" menu select "Import Appliance", and
+choose the .ova file you downloaded. Accept the default settings, then click the green "Start" arrow.
+The first time the virtual machine runs, it will have to download the Docker images from
+Dockerhub, which will take a while. When you see the login prompt on the virtual machine terminal,
+the various services should have started. (Neo4J might take a little longer to start. It's not
+very relevant, but you can log-in as "root" with the password "scumsnet" if you like.)
 
 ## Running Crawls
 
