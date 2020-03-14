@@ -45,7 +45,7 @@ control-c.
 
 ## Can't Docker, Won't Docker
 
-If you can't Docker working, or are *intimidated* by terminal windows, you might be able to get things
+If you can't get Docker working, or are *intimidated* by terminal windows, you might be able to get things
 working with [VirtualBox](https://www.virtualbox.org/). Having installed it, download the appliance image
 ["scumsnet_alpine_lite.ova"](https://scumsnet.s3.eu-west-2.amazonaws.com/scumsnet_alpine_lite.ova).
 Run VirtualBox, from the "file" menu select "Import Appliance", and
