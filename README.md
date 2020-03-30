@@ -7,7 +7,8 @@ Scumsnet is a web-crawler based on [Scrapy](https://scrapy.org/) intended for in
 transphobia on the [Mumsnet forums](https://en.wikipedia.org/wiki/Mumsnet#Criticisms).
 
 Hopefully most interested parties should be able to run it, gather data, and query it with minimal
-or no use of a shell terminal, if that is found to be intimidating.
+or no use of a shell terminal, if that is found to be intimidating. Otherwise, see the 
+[example queries](###Example Queries) below.
 
 It annotates posts based on the [Trans Media Watch](http://www.transmediawatch.org/)
 [style-guide](http://www.transmediawatch.org/Documents/Media%20Style%20Guide.pdf), and also
