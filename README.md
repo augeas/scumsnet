@@ -59,6 +59,8 @@ Dockerhub, which will take a while. When you see the login prompt on the virtual
 the various services should have started. (Neo4J might take a little longer to start. It's not
 very relevant, but you can log-in as "root" with the password "scumsnet" if you like.)
 
+![export csv](/img/vbox_terminal.png)
+
 ## Running Crawls
 
 By default, the crawler searches Mumsnet for the terms "trans", "transgender", and "transsexual".
