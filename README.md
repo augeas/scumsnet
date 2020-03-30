@@ -322,7 +322,7 @@ ORDER BY threads DESC LIMIT 50
 ```
 
 (As one would expect, the labels attached to entities are not always accurate.
-Part-of-speech-tagging is not fool-proof, but most of the entities seem
+Named entity recognition is not fool-proof, but most of the entities seem
 *relevant*.)
 
 | entity           | label    | threads |
