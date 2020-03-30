@@ -8,7 +8,7 @@ transphobia on the [Mumsnet forums](https://en.wikipedia.org/wiki/Mumsnet#Critic
 
 Hopefully most interested parties should be able to run it, gather data, and query it with minimal
 or no use of a shell terminal, if that is found to be intimidating. Otherwise, see the 
-[example queries](#Example Queries) below.
+[example queries](#example-queries) below.
 
 It annotates posts based on the [Trans Media Watch](http://www.transmediawatch.org/)
 [style-guide](http://www.transmediawatch.org/Documents/Media%20Style%20Guide.pdf), and also
