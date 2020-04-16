@@ -171,7 +171,7 @@ be loaded into a spreadsheet.
 
 | annotation                  | count |
 |-----------------------------|-------|
-| biologically (fe)male       |   678 |
+| biologically female/male    |   678 |
 | transgender as a noun       |   616 |
 | transgenderism              |   371 |
 | scare-quotes                |   328 |
@@ -179,8 +179,8 @@ be loaded into a spreadsheet.
 | post-op                     |   252 |
 | sex-change                  |   223 |
 | transgendered               |   157 |
-| become a (wo)man            |   147 |
-| biological (wo)man          |   111 |
+| become a man/woman          |   147 |
+| biological man/woman        |   111 |
 | pre-op                      |   103 |
 | gender reassignment surgery |    98 |
 | born a (wom)an              |    93 |
@@ -190,7 +190,7 @@ be loaded into a spreadsheet.
 | tranny                      |    42 |
 | gender dysmorphia           |    42 |
 | sex reassignment surgery    |    39 |
-| genetically (fe)male        |    18 |
+| genetically male/female     |    18 |
 
 To find the threads with the most posts:
 
@@ -426,8 +426,8 @@ MATCH (p:post)-[:FLAGGED]->(a:annotation) WHERE p.text CONTAINS 'Guardian' RETUR
 | scare-quotes                |
 | transgendered               |
 | transgender as a noun       |
-| become a (wo)man            |
-| biologically (fe)male       |
+| become a man/woman          |
+| biologically female/male    |
 | gender reassignment surgery |
 | transgenderism              |
 | gender bender               |
