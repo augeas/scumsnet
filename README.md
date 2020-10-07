@@ -227,62 +227,6 @@ To find the most active users in terms of their numbers of posts:
 MATCH (u:user)-[:POSTED]->(p:post) RETURN u.name AS user, COUNT(p) AS posts ORDER BY posts DESC LIMIT 20
 ```
 
-| user                       | posts |
-|----------------------------|-------|
-| R0wantrees                 |  1796 |
-| Datun                      |  1597 |
-| Ereshkigal                 |  1449 |
-| LangCleg                   |  1026 |
-| TinselAngel                |   896 |
-| AngryAttackKittens         |   821 |
-| Italiangreyhound           |   513 |
-| thebewilderness            |   486 |
-| Pratchet                   |   474 |
-| OldCrone                   |   471 |
-| Bowlofbabelfish            |   464 |
-| PencilsInSpace             |   420 |
-| LordProfFekkoThePenguinPhD |   376 |
-| RatRolyPoly                |   368 |
-| ItsAllGoingToBeFine        |   344 |
-| heresyandwitchcraft        |   336 |
-| RedToothBrush              |   325 |
-| NeurotrashWarrior          |   316 |
-| kim147                     |   314 |
-| CaptainKirksSpookyghost    |   313 |
-
-To find the users with the most annotations:
-(Where relevant, one should make allowances for reported speech, and trans
-individuals using terms considered inappropriate by others about themselves.)
-
-```
-MATCH (u:user)-[:POSTED]->(p:post)-[:FLAGGED]->(a:annotation) 
-R TURN u.name AS user, COUNT(a) AS annotations
-ORDER BY annotations DESC LIMIT 20
-```
-
-| user                 |annotations |
-|----------------------|------------|
-| R0wantrees           |        180 |
-| Datun                |        118 |
-| Ereshkigal           |         60 |
-| Beachcomber          |         46 |
-| FloraFox             |         44 |
-| Werksallhourz        |         42 |
-| RatRolyPoly          |         42 |
-| PencilsInSpace       |         36 |
-| vesuvia              |         36 |
-| OldCrone             |         32 |
-| thebewilderness      |         32 |
-| heresyandwitchcraft  |         32 |
-| CharlieParley        |         31 |
-| cantgetridofthekids  |         30 |
-| Popchyk              |         30 |
-| CoteDAzur            |         27 |
-| flowersonthepiano    |         26 |
-| Prawnofthepatriarchy |         25 |
-| Jayceedove           |         21 |
-| AllyMcBeagle         |         21 |
-
 To find the threads with the most annotations:
 
 ```
@@ -437,7 +381,7 @@ MATCH (p:post)-[:FLAGGED]->(a:annotation) WHERE p.text CONTAINS 'Guardian' RETUR
 | gender realignment          |
 | shim                        |
 
-Threads with at least annotated post, ordered by the most recent post:
+Threads with at least one annotated post, ordered by the most recent post:
 
 ```
 MATCH (t:thread)<-[:POSTED_IN]-(p:post)-[:FLAGGED]->(a:annotation)
