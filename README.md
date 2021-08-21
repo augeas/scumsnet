@@ -1,6 +1,6 @@
 # scumsnet
 
-&copy; Giles Greenway, 2020.
+&copy; Giles Greenway, 2021.
 [Licensed under the Apache License Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
 Scumsnet is a web-crawler based on [Scrapy](https://scrapy.org/) intended for investigating
@@ -47,6 +47,9 @@ docker-compose up
 
 It will take a little while to download the Docker images for the first time. You can shut the servers down with
 control-c. 
+
+If you want build the containers yourself, or just run the crawler outside of
+Docker, see the section for developers below.
 
 ## Can't Docker, Won't Docker
 
@@ -411,6 +414,51 @@ ORDER BY timestamp DESC LIMIT 20
 | Freddy McConnell appeal today (Transman who wants to be registered as their child's father) *Title edited by MNHQ | 2020-03-06T03:21:40Z |
 | The BBC is promoting a trans doctor who seemingly only affirms patients' dysphoria                                | 2020-02-28T16:41:32Z |
 | Moral Maze - Radio 4 8pm 19 Feb - Transgender Rights                                                              | 2020-02-24T03:21:02Z |
+
+
+## For Developers
+
+If you want to run the crawler locally outside of Docker,
+without all that tedious-mucking-about with-Neo4J:
+
+* Enter the same directory as `scrapy.cfg`.
+* Install [`scrapy`](https://scrapy.org/) and [`dateutil`](https://dateutil.readthedocs.io/en/stable/).
+* Run the spider, supressing the Neo4J pipeline, and sending the output to JSON.
+
+```sh
+cd scumsnet/scumsnet
+pip3 install scrapy python-dateutil scrapy
+scrapy crawl scrapy crawl mumsnet -s ITEM_PIPELINES={} -o mumsnet_crawl.json
+```
+
+However, you won't get any style-guide annotations. To run the crawer against the
+style-guides, but without using [SpaCy's NLP](https://spacy.io/):
+
+```sh
+scrapy crawl scrapy crawl mumsnet \
+    -s ITEM_PIPELINES = {'scumsnet.pipelines.tmw.TMWPipeline': 100} \
+    -o mumsnet_annotations.json
+```
+
+To detect the use of "transgender" as a noun, and perform named entity recognition,
+install SpaCy and a language model:
+
+```sh
+pip3 install spacy
+python3 -m spacy download en_core_web_sm
+scrapy crawl scrapy crawl mumsnet \
+    -s ITEM_PIPELINES = {'scumsnet.pipelines.tmw.TMWPipeline': 100 \
+    'scumsnet.pipelines.tmw_nlp.TMWEntityPipeline': 200}
+    -o mumsnet_nlp_annotations.json
+```
+
+Finally, to build and run the containers yourself:
+
+```sh
+docker-compose -f docker-compose-dev.yml build
+docker-compose -f docker-compose-dev.yml up
+```
+
 
 ## Jupyter Notebooks
 

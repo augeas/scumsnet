@@ -2,7 +2,7 @@
 # Licensed under the Apache License Version 2.0: http://www.apache.org/licenses/LICENSE-2.0.txt
 
 from datetime import datetime
-import json
+from itertools import chain
 import random
 import re
 
@@ -31,79 +31,35 @@ class MumsnetSpider(scrapy.Spider):
         super().__init__()
         
         
-    def start_requests(self):
-        url = 'https://www.mumsnet.com/info/search'
+    def start_requests(self):        
+        url = ('https://www.mumsnet.com/service/searchlambda/'
+            +'talk-search-results?q={}&sort=newest')
+
         for term in self.terms:
-            params = {'q': term}
-            yield scrapy.FormRequest(url=url, method='GET', formdata=params,
-                meta={'term': term}, callback=self.parse, dont_filter=True)
-
-
+            yield scrapy.Request(url=url.format(term), callback=self.parse)
+            
+            
     def parse(self, response):
-        cx_path = "//script[starts-with(.,'(function(){var cx')]/text()"
-        cx_scr = scr = response.xpath(cx_path).extract_first()
-        self.cx, = re.findall(r"(?<=cx=')[a-zA-Z0-9:]+", cx_scr)
-        url = 'https://cse.google.com/cse.js'
-        term = response.meta.get('term')
-        params = {'cx': self.cx}
-        yield scrapy.FormRequest(url=url, method='GET', formdata=params,
-            meta={'term': term}, callback=self.parse_cse, dont_filter=True)
+        threads = response.css('section.search-results').css(
+            'div.search-service__search-item').xpath('a/@href').extract()  
         
+        titles = [t.split('/')[-1].split('?')[0] for t in threads]   
         
-    def search_pars(self, term, page=1, date_sort=True):
-        suffix = str(random.randint(2000, 4000))
-        pars = {'rsz': 'filtered_cse', 'num': '10', 'hl': 'en',
-            'source': 'gcsc', 'gss': '.com', 'start': str(10*page),
-            'cselibv': self.cse_lib, 'cx': self.cx, 'q': term, 'safe': 'off',
-            'cse_tok': self.cse, 'exp': 'csqr,cc',
-            'callback': 'google.search.cse.api'+suffix}
-        if date_sort:
-            pars['sort'] = 'date'
-        return pars
-    
+        yield from (scrapy.Request(url=url, meta={'thread': title},
+            callback=self.parse_thread) for url, title in zip(threads, titles))
         
-    def parse_cse(self, response):
-        self.cse, = re.findall(u'(?<="cse_token": ")[a-zA-Z0-9:]+',
-            response.text)
-        self.cse_lib, = re.findall(u'(?<="cselibVersion": ")[a-zA-Z0-9:]+',
-            response.text)
-        term = response.meta.get('term')
-        params = self.search_pars(term)
-        yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
-            method='GET', formdata=params,
-            meta={'term': term, 'page': 1}, callback=self.parse_results,
-            dont_filter=True)
+        pages = response.css('ul.pagination').xpath('li/a/@href').extract()
         
+        page_numbers = list(chain.from_iterable(
+            map(lambda p: re.findall('(?<=page=)[0-9]+$', p), pages))) 
         
-    def parse_results(self, response):
+        previous_pages = response.meta.get('previous', [])
         
-        json_resp = json.loads('{'
-            +'\n'.join(response.text.split('\n')[2:-1])
-            +'}')
+        yield from (scrapy.Request(url=url, meta={'previous': previous_pages},
+            callback = self.parse) for url, page in zip(pages, page_numbers)
+            if page not in previous_pages)
         
-        results = json_resp.get('results', [])
-        
-        term = response.meta['term']
-        page = response.meta.get('page', 1)
-        
-        if 'results' not in json_resp.keys():
-            params = self.search_pars(term, page=page)
-            yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
-                method='GET', formdata=params,
-                meta={'term': term, 'page': page}, callback=self.parse_results,
-                dont_filter=True)            
-        
-        for res in results:
-            yield scrapy.Request(url=res['url'], callback=self.parse_thread)
-
-        if results:
-            next_page = 1 + page
-            params = self.search_pars(term, page=next_page)
-            yield scrapy.FormRequest(url='https://cse.google.com/cse/element/v1',
-                method='GET', formdata=params,
-                meta={'term': term, 'page': next_page}, callback=self.parse_results)
-                    
-        
+         
     def parse_thread(self, response):
         thread = response.meta.get('thread',
             response.css('h1.thread_name').xpath('text()').extract_first())
@@ -140,5 +96,4 @@ class MumsnetSpider(scrapy.Spider):
                 meta={'thread_page': thread_page+1, 'thread': thread,
                 'thread_url': thread_url})
             
-        
         
